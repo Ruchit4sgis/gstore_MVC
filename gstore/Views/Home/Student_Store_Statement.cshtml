@@ -1,0 +1,202 @@
+﻿
+@using System.Data.OleDb;
+    @{
+        ViewBag.Title = "Studnet Store Details";
+    }
+<html>
+        <head>
+            <style>
+                .container{
+                 width: 1000px !important;}
+
+            </style>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+          <script>
+                var debit_total = 0;
+                var credit_total = 0;
+                var total_balance = 0;
+                $(document).ready(function () {
+                    var id = [];
+                    $('#test tbody tr').each(function () {
+                        if ($(this).find('td:eq(1)').text() != ""
+                          &&
+                        id.indexOf($(this).find('td:eq(1)').text()) == -1
+                        ) {
+                            id.push($(this).find('td:eq(1)').text())
+                        }
+                    });
+                    objNewTable = "<thead><tr><th>ID</th><th>MemberID</th><th>Name</th><th>Debit</th></tr></thead> ";
+                            for (i = 0; i < id.length; i++) {
+                                var tableRow = $("#test td").filter(function () {
+                                    return $(this).text() == id[i];
+                                }).closest("tr");
+
+
+                            sum = 0;
+                        $(tableRow).each(function () {
+                                sum = sum + parseInt($(this).find("td:eq(5)").text(), 10);
+
+                        });
+                        debit_total = sum;
+                        total_balance -= debit_total;
+
+                            objNewTable = objNewTable + "<tr><td>" + (i + 1) + "</td><td>" + $(tableRow).find(':eq(1)').html() + "</td><td>" + $(tableRow).find(':eq(2)').html() + "</td><td>" + sum + "</td></tr>"
+                    }
+
+                    $('#result').html(objNewTable)
+
+                });
+            </script>
+          <script>
+                $(document).ready(function () {
+                    var id = [];
+                    $('#test1 tbody tr').each(function () {
+                        if ($(this).find('td:eq(1)').text() != ""
+                          &&
+                        id.indexOf($(this).find('td:eq(1)').text()) == -1
+                        ) {
+                            id.push($(this).find('td:eq(1)').text())
+                        }
+                    });
+                    objNewTable = "<thead><tr><th>Member ID</th><th>Name</th><th>Credit</th></tr></thead> ";
+                            for (i = 0; i < id.length; i++) {
+                                var tableRow = $("#test1 td").filter(function () {
+                                    return $(this).text() == id[i];
+                                }).closest("tr");
+
+
+                            sum = 0;
+                        $(tableRow).each(function () {
+                                sum = sum + parseInt($(this).find("td:eq(5)").text(), 10);
+
+                        });
+                        credit_total = sum;
+                        total_balance += credit_total;
+                            objNewTable = objNewTable + "<tr>"+"<td>" + $(tableRow).find(':eq(0)').html() + "</td><td>" + $(tableRow).find(':eq(1)').html() + "</td><td>" + sum + "</td></tr>"
+                            }
+                            $('#credit_total').html(credit_total + "&#x20b9;");
+                            $('#debit_total').html(debit_total + "&#x20b9;");
+                            $('#total_balance').html(total_balance + "&#x20b9;");
+                            $('#result1').html(objNewTable)
+
+
+                });
+            </script>
+          <script>
+                $(document).ready(function () {
+                    $('#test1 tr').find('th:first-child, td:first-child').remove()
+                    $('#test1 tr').find('th:first-child, td:first-child').remove()
+                    $('#test1 tr').find('th:first-child, td:first-child').remove()
+                    //$('#test1 tr').find('th:last-child, td:last-child').remove()
+                    $('#test1 tr').find('th:last-child, td:last-child').remove()
+                    $('#test tr').find('th:first-child, td:first-child').remove()
+                    $('#test tr').find('th:first-child, td:first-child').remove()
+                    $('#test tr').find('th:first-child, td:first-child').remove()
+                });
+            </script>
+        </head>
+        
+        <body>      
+                <div class="container">
+                    <br /><br />
+
+                    @*Form*@
+                    @using (Html.BeginForm())
+            {
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input class="form-control" name="mid" value="@ViewBag.Member_id" placeholder="MID Search" />
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" name="Member_search" class="btn btn-success ">Search</button>
+                            </div>
+                            <div class="col-md-1">
+                                <input class="form-control" name="room" value="@ViewBag.Room" placeholder="Room" />
+                            </div>
+                            <div class="col-md-1">
+                                <input class="form-control" name="cup" value="@ViewBag.Cup" placeholder="Cup" />
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" name="Rooom_search" class="btn btn-info ">Search</button>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" name="Room_Print" class="btn btn-default ">Next Cupbord</button>
+                            </div>
+                        </div>
+                    }
+
+
+                    @*Student Details*@
+
+                    <hr class="divider" />
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h4>@ViewBag.Member_id</h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h4>@ViewBag.Name</h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h4>@ViewBag.Room_Cup</h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h4>@ViewBag.Class</h4>
+                        </div>
+                    </div>
+                    <hr class="divider" />
+                    <h2>Balance</h2>
+                    <table id='result2' class="table" style="width:40%">
+                        <tr>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Balance</th>
+                        </tr>
+                        <tr>
+                            <td><h1 id="credit_total" style="color:blue"></h1></td>
+                            <td><h1 id="debit_total" style="color:red"></h1></td>
+                            <td><h1 id="total_balance" style="color:green;font-weight:bold"></h1></td>
+                        </tr>
+                    </table>
+                    <hr class="divider" />
+
+                    @*Credit Debit Details Table*@
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>Debit Record</h4>
+                            @Html.Raw(ViewBag.debit_get)
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Credit Record</h4>
+                            @Html.Raw(ViewBag.credit)
+                        </div>
+                    </div>
+
+                    @*Balance Report*@
+
+
+                    @ViewBag.erroe
+
+                    @*<table id='result2' class="table" style="width:30%">
+                    <tr>
+                        <th>Detail</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td><h4>Total Credit:</h4></td>
+                        <td><h4 id="credit_total" style="color:blue;text-align:right;"></h4></td>
+                    </tr>
+                    <tr>
+                        <td><h4>Total Debit:</h4></td>
+                        <td><h4 id="debit_total" style="color:red;text-align:right;"></h4></td>
+                    </tr>
+                    <tr style="border-top:1px solid #808080">
+                        <td><h4>Balance:</h4></td>
+                        <td><h4 id="total_balance" style="color:green;font-weight:bold;text-align:right;"></h4></td>
+                    </tr>
+                </table>*@
+                </div>
+
+
+        </body>
+</html>
